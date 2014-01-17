@@ -17,6 +17,6 @@ func main() {
         return r, nil
       }
     })
-  proxy.Verbose = true
+  proxy.Verbose = false
   http.ListenAndServe(":8384", proxy)
 }
