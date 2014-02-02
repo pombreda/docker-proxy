@@ -1,0 +1,76 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:           dockboard.org
+# Required-Start:     $syslog $remote_fs
+# Required-Stop:      $syslog $remote_fs
+# Default-Start:      2 3 4 5
+# Default-Stop:       0 1 6
+# Short-Description:  Create lightweight http proxy for Docker daemon.
+# Description:
+#       Author: Meaglith Ma
+# 	Email: genedna@gmail.com
+#       Website: http://www.dockboard.org 
+### END INIT INFO
+
+BASE=$(basename $0)
+
+DOCKER_PROXY=/usr/bin/$BASE
+DOCKER_PROXY_PIDFILE=/var/run/$BASE.pid
+DOCKER_PROXY_OPTS=
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+
+# Check docker is present
+if [ ! -x $DOCKER_PROXY ]; then
+	exit 1
+fi
+
+fail_unless_root() {
+	if [ "$(id -u)" != '0' ]; then
+		exit 1
+	fi
+}
+
+case "$1" in
+	start)
+		fail_unless_root
+		start-stop-daemon --start --background \
+			--exec "$DOCKER_PROXY" \
+			--pidfile "$DOCKER_PROXY_PIDFILE" \
+			-- -d -p "$DOCKER_PROXY_PIDFILE" \
+			$DOCKER_PROXY_OPTS
+		;;
+
+	stop)
+		fail_unless_root
+		start-stop-daemon --stop \
+			--pidfile "$DOCKER_PROXY_PIDFILE"
+		log_end_msg $?
+		;;
+
+	restart)
+		fail_unless_root
+		docker_pid=`cat "$DOCKER_PROXY_PIDFILE" 2>/dev/null`
+		[ -n "$docker_pid" ] \
+			&& ps -p $docker_pid > /dev/null 2>&1 \
+			&& $0 stop
+		$0 start
+		;;
+
+	force-reload)
+		fail_unless_root
+		$0 restart
+		;;
+
+	status)
+		status_of_proc -p "$DOCKER_PROXY_PIDFILE" "$DOCKER" docker
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+
+exit 0
