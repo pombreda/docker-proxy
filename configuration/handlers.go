@@ -13,20 +13,6 @@ type FileEventHandler interface {
 	Handle(event *fsnotify.FileEvent)
 }
 
-// func GetHandler(name, filePath string) FileEventHandler {
-// 	switch strings.ToLower(name) {
-// 	case "blacklisthandler":
-// 		return &BlacklistHandler{
-// 			filePath: strings.NewReplacer("/", "\\").Replace(filePath),
-// 		}
-// 	case "whitelisthandler":
-// 		return &WhitelistHandler{
-// 			filePath: strings.NewReplacer("/", "\\").Replace(filePath),
-// 		}
-// 	}
-// 	return nil
-// }
-
 type BlacklistFileHandlerConstructor struct{}
 
 func (bhc BlacklistFileHandlerConstructor) new(filePath string) FileEventHandler {

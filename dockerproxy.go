@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	configuration "github.com/alan7yg/docker-proxy/configuration"
 	"github.com/elazarl/goproxy"
 	"github.com/fzzy/radix/redis"
@@ -23,7 +22,6 @@ func main() {
 	proxy.OnRequest().DoFunc(
 		func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 			match, _ := regexp.MatchString("^*.docker.io$", r.URL.Host)
-			// fmt.Println(r)
 			ip := getIP(r)
 			if configuration.GetWhitelistConfig().Contains(ip) {
 				log.Printf("IP in whitelist: %s\n", ip)
