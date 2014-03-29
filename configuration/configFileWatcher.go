@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+/*新建文件监听*/
 func NewConfigFileWatcher(filePaths []string, handlers []FileEventHandler) *ConfigWatcher {
 	return &ConfigWatcher{
 		filePaths: filePaths,
@@ -13,17 +14,20 @@ func NewConfigFileWatcher(filePaths []string, handlers []FileEventHandler) *Conf
 	}
 }
 
+/*监听配置结构体*/
 type ConfigWatcher struct {
 	filePaths []string
 	handlers  []FileEventHandler
 }
 
+/*启动监听*/
 func (cw *ConfigWatcher) StartWatch() {
+	/*创建新监听*/
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	/*创建通讯channel*/
 	done := make(chan bool)
 
 	// Process events

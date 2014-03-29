@@ -1,6 +1,9 @@
+/*这个文件想不出来写什么。。。*/
 package configuration
 
 import (
+	/*fsnotify:通知;通知单;布告;公布
+	File system notification for Go*/
 	"github.com/howeyc/fsnotify"
 	"log"
 )
