@@ -1,6 +1,5 @@
 docker-proxy
 ============
-[![Build Status](https://drone.io/github.com/dockboard/docker-proxy/status.png)](https://drone.io/github.com/dockboard/docker-proxy/latest)
 
 A http proxy for docker daemon.
 
